@@ -764,7 +764,7 @@ LIST * builtin_glob( FRAME * frame, int flags )
     globbing.patterns = r;
 
     globbing.case_insensitive =
-# if defined( OS_NT ) || defined( OS_CYGWIN ) || defined( OS_VMS )
+# if defined( OS_NT ) || defined( OS_CYGWIN ) || defined( OS_VMS ) || defined( OS_OS2 )
        l;  /* Always case-insensitive if any files can be found. */
 # else
        lol_get( frame->args, 2 );
@@ -813,7 +813,7 @@ LIST * glob1( OBJECT * dirname, OBJECT * pattern )
     globbing.patterns = plist;
 
     globbing.case_insensitive
-# if defined( OS_NT ) || defined( OS_CYGWIN ) || defined( OS_VMS )
+# if defined( OS_NT ) || defined( OS_CYGWIN ) || defined( OS_VMS ) || defined( OS_OS2 )
        = plist;  /* always case-insensitive if any files can be found */
 # else
        = L0;

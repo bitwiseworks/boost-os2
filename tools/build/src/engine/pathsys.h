@@ -111,7 +111,7 @@ namespace b2 { namespace paths {
 
 inline bool is_rooted(const std::string & p)
 {
-#if NT
+#if NT || defined __OS2__
 	return (p.size() >= 1 && (p[0] == '/' || p[0] == '\\'))
 		|| (p.size() >= 3 && p[1] == ':' && (p[2] == '/' || p[2] == '\\'));
 #else

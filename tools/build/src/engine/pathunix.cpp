@@ -42,6 +42,10 @@ unsigned long path_get_process_id_( void )
 void path_get_temp_path_( string * buffer )
 {
     char const * t = getenv( "TMPDIR" );
+#ifdef OS_OS2
+    if (!t)
+      const char * t = getenv("TEMP");
+#endif
     string_append( buffer, t ? t : "/tmp" );
 }
 

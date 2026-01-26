@@ -156,6 +156,7 @@ check_toolset ()
 
     # Prefer Clang (clang) on macOS..
     if test_toolset clang && test_uname Darwin && test_compiler clang++$TOOLSET_SUFFIX -x c++ -std=c++11 ; then B2_TOOLSET=clang$TOOLSET_SUFFIX ; return ${TRUE} ; fi
+    if test_toolset gcc && test_uname OS/2 && test_compiler g++$TOOLSET_SUFFIX -x c++ -std=c++11 -D_GNU_SOURCE ; then B2_TOOLSET=gcc$TOOLSET_SUFFIX ; return ${TRUE} ; fi
     # GCC (gcc) with -pthread arg (for AIX and others)..
     if test_toolset gcc && test_compiler g++$TOOLSET_SUFFIX -x c++ -std=c++11 -pthread ; then B2_TOOLSET=gcc$TOOLSET_SUFFIX ; return ${TRUE} ; fi
     # GCC (gcc)..
@@ -404,6 +405,10 @@ case "${B2_TOOLSET}" in
         error_exit "Unknown toolset: ${B2_TOOLSET}"
     ;;
 esac
+if test_uname OS/2 ; then
+    B2_CXXFLAGS_RELEASE="${B2_CXXFLAGS_RELEASE} -Zomf -Zhigh-mem -lcx"
+    B2_CXXFLAGS_DEBUG="${B2_CXXFLAGS_RELEASE} -Zomf -Zhigh-mem -lcx"
+fi
 
 build_b2 ()
 {
@@ -503,7 +508,7 @@ mod_version.cpp \
             ( B2_VERBOSE_OPT=${TRUE} echo_run ${WINDRES} --input res.rc --output res.o )
         fi
     fi
-    ( B2_VERBOSE_OPT=${TRUE} echo_run ${B2_CXX} ${B2_CXXFLAGS} ${B2_SOURCES} -o b2 )
+    ( B2_VERBOSE_OPT=${TRUE} echo_run ${B2_CXX} ${B2_CXXFLAGS} ${B2_SOURCES} -o b2)
 }
 
 if test_true ${B2_VERBOSE_OPT} ; then

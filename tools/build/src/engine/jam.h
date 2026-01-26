@@ -138,11 +138,25 @@
 
 #ifndef OSMINOR
 
+#ifndef __OS2__
 #define OSMAJOR "UNIX=true"
+#else
+#define OSMAJOR "OS2=true"
+#endif
 #define USE_EXECUNIX
 #define USE_FILEUNIX
 #define USE_PATHUNIX
+#ifndef __OS2__
 #define PATH_DELIM '/'
+#endif
+
+#ifdef __OS2__
+#define OSMINOR "OS=OS2"
+#define PATH_DELIM '\\'
+#define SPLITPATH ';'
+#define NO_VFORK
+#define OS_OS2
+#endif
 
 #ifdef _AIX
 #define unix

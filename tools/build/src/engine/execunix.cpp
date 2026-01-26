@@ -40,6 +40,10 @@
     #define vfork() fork()
 #endif
 
+#if defined(__OS2__)
+#include <sys/socket.h>
+#define pipe(A) socketpair(AF_UNIX, SOCK_STREAM, 0, A)
+#endif
 
 /*
  * execunix.c - execute a shell script on UNIX/OS2/AmigaOS
@@ -192,7 +196,11 @@ void exec_cmd
     static LIST * default_shell;
     if ( !default_shell )
         default_shell = list_push_back( list_new(
+#ifndef __OS2__
             object_new( "/bin/sh" ) ),
+#else
+            object_new( "/@unixroot/usr/bin/sh" ) ),
+#endif
             object_new( "-c" ) );
 
     if ( list_empty( shell ) )

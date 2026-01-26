@@ -21,6 +21,11 @@ PYTHON=python
 PYTHON_VERSION=
 PYTHON_ROOT=
 ICU_ROOT=
+if test `uname` = OS/2; then
+EXEEXT=.exe
+else
+EXEEXT=
+fi
 
 # Handle case where builtin shell version of echo command doesn't 
 # support -n.  Use the installed echo executable if there is one 
@@ -235,7 +240,7 @@ if test "x$BJAM" = x; then
   cd "$pwd"
   BJAM="$my_dir/tools/build/src/engine/b2"
   echo "tools/build/src/engine/b2"
-  cp "$BJAM" .
+  cp "$BJAM$EXEEXT" .
 
 fi
 
