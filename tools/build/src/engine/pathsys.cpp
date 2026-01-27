@@ -469,7 +469,11 @@ char * executable_path( char const * argv0 )
         std::string::size_type i = 0;
         while (i != std::string::npos)
         {
+#if !defined(OS_OS2)
             std::string::size_type e = path_env.find_first_of(':', i);
+#else
+            std::string::size_type e = path_env.find_first_of(';', i);
+#endif
             std::string p = e == std::string::npos
                 ? path_env.substr(i)
                 : path_env.substr(i, e-i);
