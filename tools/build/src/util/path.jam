@@ -559,6 +559,18 @@ rule make-CYGWIN ( path )
 }
 
 
+rule make-OS2 ( path )
+{
+    return [ make-NT $(path) ] ;
+}
+
+
+rule native-OS2 ( path )
+{
+    return [ native-NT $(path) ] ;
+}
+
+
 rule native-CYGWIN ( path )
 {
     local result = $(path) ;
