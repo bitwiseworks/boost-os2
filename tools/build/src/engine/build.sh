@@ -407,7 +407,7 @@ case "${B2_TOOLSET}" in
 esac
 if test_uname OS/2 ; then
     B2_CXXFLAGS_RELEASE="${B2_CXXFLAGS_RELEASE} -Zomf -Zhigh-mem -lcx"
-    B2_CXXFLAGS_DEBUG="${B2_CXXFLAGS_RELEASE} -Zomf -Zhigh-mem -lcx"
+    B2_CXXFLAGS_DEBUG="${B2_CXXFLAGS_DEBUG} -Zomf -Zhigh-mem -lcx"
 fi
 
 build_b2 ()
