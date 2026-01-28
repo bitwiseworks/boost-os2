@@ -26,6 +26,11 @@ import os ;
 #     cygxxx.dll     DLL
 #     libxxx.dll.a   import library
 #
+# On os2:
+#     libxxx.a       static library
+#     xxx.dll        DLL
+#     libxxx_dll.a   import library
+#
 
 type.register LIB ;
 
@@ -40,6 +45,9 @@ type.set-generated-target-suffix STATIC_LIB : <target-os>windows : lib ;
 
 # Except with gcc.
 type.set-generated-target-suffix STATIC_LIB : <toolset>gcc <target-os>windows : a ;
+
+# Use '.a' suffix for os2
+type.set-generated-target-suffix STATIC_LIB : <target-os>os2 : a ;
 
 # Use xxx.lib for import libs
 type IMPORT_LIB : : STATIC_LIB ;
@@ -59,11 +67,14 @@ type.set-generated-target-prefix SHARED_LIB : : lib ;
 type.set-generated-target-prefix SHARED_LIB : <target-os>windows : "" ;
 # But use it again on mingw
 type.set-generated-target-prefix SHARED_LIB : <toolset>gcc <target-os>windows : lib ;
+# But don't use it on os2
+type.set-generated-target-prefix SHARED_LIB : <target-os>os2 : "" ;
 # And use 'cyg' on cygwin
 type.set-generated-target-prefix SHARED_LIB : <target-os>cygwin : cyg ;
 
 
 type.set-generated-target-suffix SHARED_LIB : <target-os>windows : dll ;
+type.set-generated-target-suffix SHARED_LIB : <target-os>os2 : dll ;
 type.set-generated-target-suffix SHARED_LIB : <target-os>cygwin : dll ;
 type.set-generated-target-suffix SHARED_LIB : <target-os>darwin : dylib ;
 

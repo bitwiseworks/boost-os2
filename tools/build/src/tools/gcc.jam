@@ -136,6 +136,7 @@ toolset.inherit-rules gcc : unix ;
 type.set-generated-target-suffix OBJ : <toolset>gcc : o ;
 type.set-generated-target-suffix OBJ : <toolset>gcc <target-os>windows : o ;
 type.set-generated-target-suffix OBJ : <toolset>gcc <target-os>cygwin : o ;
+type.set-generated-target-suffix OBJ : <toolset>gcc <target-os>os2 : o ;
 
 
 # Initializes the gcc toolset for the given version. If necessary, command may
@@ -371,7 +372,7 @@ local rule compile-link-flags ( * )
 
     # On Windows, fPIC is the default, and specifying -fPIC explicitly leads
     # to a warning.
-    local non-windows = [ set.difference $(all-os) : cygwin windows ] ;
+    local non-windows = [ set.difference $(all-os) : cygwin windows os2 ] ;
     compile-link-flags <link>shared/<target-os>$(non-windows) : -fPIC ;
 }
 
@@ -406,6 +407,7 @@ local rule compile-link-flags ( * )
     threading-flags <target-os>cygwin/<threadapi>pthread : -pthread ;
     threading-flags <target-os>solaris  : -pthreads : rt ;
     threading-flags <target-os>qnx : -pthread ;
+    threading-flags <target-os>os2 : : pthread ;
 
     local bsd = [ MATCH ^(.*bsd)$ : $(all-os) ] ;
     threading-flags <target-os>$(bsd) : -pthread ;
@@ -413,7 +415,7 @@ local rule compile-link-flags ( * )
     # iOS doesn't need pthread flag according to the https://developer.apple.com/library/archive/documentation/System/Conceptual/ManPages_iPhoneOS/man3/pthread.3.html
     # The default system libraries include pthread functions.  No additional libraries or CFLAGS are necessary to use this API.
     local no-threading = android beos haiku sgi darwin vxworks iphone appletv ;
-    local threading-generic-os = [ set.difference $(all-os) : $(no-threading) $(bsd) windows cygwin solaris qnx ] ;
+    local threading-generic-os = [ set.difference $(all-os) : $(no-threading) $(bsd) windows cygwin solaris qnx os2 ] ;
     threading-flags <target-os>$(threading-generic-os) : -pthread : rt ;
 }
 
@@ -748,6 +750,7 @@ class gcc-linking-generator : unix-linking-generator
         {
             case vms : no-static-link = ;
             case windows : no-static-link = ;
+            case os2 : no-static-link = ;
         }
 
         local properties = [ $(property-set).raw ] ;
@@ -895,6 +898,10 @@ toolset.flags gcc.link OPTIONS <coverage>on : --coverage ;
     # See note [1]
     toolset.flags gcc.link OPTIONS <target-os>aix/<runtime-link>static : -static ;
 
+    # on os2 we use native linker
+    toolset.flags gcc.link OPTIONS <target-os>os2 : -Zomf -Zhigh-mem -lcx ;
+    toolset.flags gcc.link.dll OPTIONS <target-os>os2 : -Zdll -Zomf -Zhigh-mem -lcx ;
+
     # darwin
 
     # On Darwin, the -s option to ld does not work unless we pass -static,
@@ -922,7 +929,7 @@ toolset.flags gcc.link OPTIONS <coverage>on : --coverage ;
 
     # default
 
-    local generic-os = [ set.difference $(all-os) : aix darwin vxworks solaris osf hpux iphone appletv ] ;
+    local generic-os = [ set.difference $(all-os) : aix darwin vxworks solaris osf hpux iphone appletv os2 ] ;
     # Strip the binary when no debugging is needed. We use --strip-all flag
     # as opposed to -s since icc (intel's compiler) is generally
     # option-compatible with and inherits from the gcc toolset, but does not
@@ -933,7 +940,7 @@ toolset.flags gcc.link OPTIONS <coverage>on : --coverage ;
         -Wl,--start-group ;
     toolset.flags gcc.link END-GROUP <target-os>$(generic-os) : -Wl,--end-group ;
 
-    local rpath-os = [ set.difference $(all-os) : aix darwin vxworks solaris osf hpux windows ] ;
+    local rpath-os = [ set.difference $(all-os) : aix darwin vxworks solaris osf hpux windows os2 ] ;
     toolset.flags gcc.link RPATH <target-os>$(rpath-os) : <dll-path> ;
     toolset.flags gcc.link RPATH_OPTION <target-os>$(rpath-os) : -rpath ;
     toolset.flags gcc.link RPATH_LINK <target-os>$(rpath-os) : <xdll-path> ;
@@ -980,7 +987,7 @@ toolset.flags gcc.link OPTIONS <coverage>on : --coverage ;
     toolset.flags gcc.link FINDLIBS-SA-PFX <target-os>windows/<runtime-link>static : -Wl,-Bdynamic ;
     toolset.flags gcc.link OPTIONS <target-os>windows/<runtime-link>static : -Wl,-Bstatic ;
 
-    local soname-os = [ set.difference $(generic-os) : windows ] ;
+    local soname-os = [ set.difference $(generic-os) : windows os2 ] ;
     toolset.flags gcc.link HAVE_SONAME <target-os>$(soname-os) : "" ;
     toolset.flags gcc.link SONAME_OPTION <target-os>$(soname-os) : -soname ;
 

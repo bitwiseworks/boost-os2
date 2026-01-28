@@ -392,6 +392,8 @@ local rule check-tool-aux ( command )
             # Only NT will run .bat & .cmd files by their unqualified names.
             || ( ( [ os.name ] = NT ) && ( [ path.exists $(command).bat ] ||
                 [ path.exists $(command).cmd ] ) )
+            || ( ( [ os.name ] = OS2 ) && ( [ path.exists $(command).bat ] ||
+                [ path.exists $(command).cmd ] || [ path.exists $(command).exe ] ) )
         {
             return $(command) ;
         }
@@ -560,7 +562,7 @@ rule newline-char ( )
 #
 rule variable-setting-command ( variable : value )
 {
-    if [ os.name ] = NT
+    if [ os.name ] = NT || [ os.name ] = OS2
     {
         return "set $(variable)=$(value)$(nl)" ;
     }
@@ -680,7 +682,7 @@ rule MkDir
         # recurse until root.
 
         local s = $(<:P) ;
-        if [ os.name ] = NT
+        if [ os.name ] = NT || [ os.name ] = OS2
         {
             switch $(s)
             {

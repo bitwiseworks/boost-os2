@@ -11,7 +11,7 @@ import os ;
     none
     aix android appletv bsd cygwin darwin freebsd haiku hpux iphone linux
     netbsd openbsd osf qnx qnxnto sgi solaris unix unixware windows vms vxworks
-    freertos
+    freertos os2
 
     # Not actually an OS -- used for targeting bare metal where object
     # format is ELF.  This catches both -elf and -eabi gcc targets as well
@@ -80,7 +80,7 @@ feature.set-default host-os : [ default-host-os ] ;
 *Allowed values:* `aix`, `android`, `appletv`, `bsd`, `cygwin`, `darwin`,
 `freebsd`, `haiku`, `hpux`, `iphone`, `linux`, `netbsd`, `openbsd`, `osf`,
 `qnx`, `qnxnto`, `sgi`, `solaris`, `unix`, `unixware`, `windows`, `vms`,
-`vxworks`, `freertos`.
+`vxworks`, `freertos`, `os2`.
 +
 Specifies the operating system for which the code is to be generated. The
 compiler you used should be the compiler for that operating system. This option

@@ -415,7 +415,7 @@ local rule load-configuration-files
 
     local user-path = [ os.home-directories ] [ os.environ BOOST_BUILD_PATH ] ;
     local site-path = /etc $(user-path) ;
-    if [ os.name ] in NT CYGWIN
+    if [ os.name ] in NT CYGWIN OS2
     {
         site-path = [ modules.peek : SystemRoot ] $(user-path) ;
     }

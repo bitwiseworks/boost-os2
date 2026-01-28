@@ -129,6 +129,11 @@ actions ln-UNIX
     ln -f -s '$(>:D=:R=$(PATH_TO_SOURCE))' '$(<)'
 }
 
+actions ln-OS2
+{
+    ln -f -s '$(>:D=:R=$(PATH_TO_SOURCE))' '$(<)'
+}
+
 # there is a way to do this; we fall back to a copy for now
 actions ln-NT
 {

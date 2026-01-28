@@ -82,6 +82,10 @@ if $(.name) = NT
 .expand-variable-prefix-NT = % ;
 .expand-variable-suffix-NT = % ;
 .executable-suffix-NT = .exe ;
+.executable-suffix-OS2 = .exe ;
+.path-separator-OS2 = ";" ;
+.expand-variable-prefix-OS2 = % ;
+.expand-variable-suffix-OS2 = % ;
 
 .shared-library-path-variable-CYGWIN = PATH ;
 

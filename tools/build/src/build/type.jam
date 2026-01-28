@@ -361,7 +361,7 @@ local rule generated-target-ps ( ps : type : property-set )
 #
 rule type ( filename )
 {
-    if [ os.name ] in NT CYGWIN
+    if [ os.name ] in NT CYGWIN OS2
     {
         filename = $(filename:L) ;
     }

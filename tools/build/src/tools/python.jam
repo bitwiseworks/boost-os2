@@ -357,6 +357,10 @@ local rule windows-path-to-native ( path )
     {
         return $(path) ;
     }
+    else if [ os.name ] = OS2
+    {
+        return $(path) ;
+    }
     else
     {
         return [ windows-to-cygwin-path $(path) ] ;
@@ -780,6 +784,7 @@ local rule configure ( version ? : cmd-or-prefix ? : includes * : libraries ? :
         {
             case windows : platform = win32 ;
             case cygwin : platform = cygwin ;
+            case os2 : platform = os2knix ;
         }
 
         while $(cmds-to-try)
@@ -787,6 +792,11 @@ local rule configure ( version ? : cmd-or-prefix ? : includes * : libraries ? :
             # Pop top command.
             local cmd = $(cmds-to-try[1]) ;
             cmds-to-try = $(cmds-to-try[2-]) ;
+
+            if [ os.name ] = OS2
+            {
+                cmd = [ NORMALIZE_PATH $(cmd) ] ;
+            }
 
             debug-message Checking interpreter command \"$(cmd)\"... ;
             if [ probe $(cmd) ]
