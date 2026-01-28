@@ -36,7 +36,7 @@ BOOST_CONSTEXPR_OR_CONST char posix_valid_chars[] =
 
 //  name_check functions  ----------------------------------------------//
 
-#ifdef BOOST_WINDOWS
+#if defined(BOOST_WINDOWS) || defined(__OS2__)
 BOOST_FILESYSTEM_DECL bool native(std::string const& name)
 {
     return windows_name(name);
