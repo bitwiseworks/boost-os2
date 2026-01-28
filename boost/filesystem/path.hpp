@@ -162,6 +162,8 @@ class path :
     public filesystem::path_detail::path_constants<
 #ifdef BOOST_WINDOWS_API
         detail::path_traits::path_native_char_type, L'/', L'\\', L'.'
+#elif defined(__OS2__)
+        detail::path_traits::path_native_char_type, '/', '\\', '.'
 #else
         detail::path_traits::path_native_char_type, '/', '/', '.'
 #endif
@@ -1416,7 +1418,7 @@ namespace detail {
 inline bool is_directory_separator(path::value_type c) noexcept
 {
     return c == path::separator
-#ifdef BOOST_WINDOWS_API
+#if defined(BOOST_WINDOWS_API) || defined(__OS2__)
         || c == path::preferred_separator
 #endif
         ;
@@ -1427,6 +1429,8 @@ inline bool is_element_separator(path::value_type c) noexcept
     return c == path::separator
 #ifdef BOOST_WINDOWS_API
         || c == path::preferred_separator || c == L':'
+#elif defined(__OS2__)
+        || c == path::preferred_separator || c == ':'
 #endif
         ;
 }

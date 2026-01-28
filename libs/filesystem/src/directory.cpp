@@ -117,6 +117,7 @@ namespace detail {
 
 #if defined(BOOST_POSIX_API)
 
+#ifndef __OS2__
 //! Opens a directory file and returns a file descriptor. Returns a negative value in case of error.
 boost::scope::unique_fd open_directory(path const& p, directory_options opts, system::error_code& ec)
 {
@@ -161,6 +162,7 @@ boost::scope::unique_fd open_directory(path const& p, directory_options opts, sy
     return boost::scope::unique_fd(res);
 #endif
 }
+#endif
 
 #if defined(BOOST_FILESYSTEM_HAS_POSIX_AT_APIS)
 

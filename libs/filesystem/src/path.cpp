@@ -32,6 +32,10 @@
 #include <boost/filesystem/detail/utf8_codecvt_facet.hpp>
 #endif
 
+#if defined(__OS2__)
+#include "os2_tools.hpp"
+#endif
+
 #ifdef BOOST_FILESYSTEM_DEBUG
 #include <iostream>
 #include <iomanip>
@@ -61,7 +65,7 @@ typedef path::value_type value_type;
 typedef path::string_type string_type;
 typedef string_type::size_type size_type;
 
-#ifdef BOOST_WINDOWS_API
+#if defined(BOOST_WINDOWS_API)
 
 const wchar_t dot_path_literal[] = L".";
 const wchar_t dot_dot_path_literal[] = L"..";
@@ -97,6 +101,48 @@ inline size_type find_separator(const wchar_t* p, size_type size) noexcept
     for (; pos < size; ++pos)
     {
         const wchar_t c = p[pos];
+        if (boost::filesystem::detail::is_directory_separator(c))
+            break;
+    }
+    return pos;
+}
+
+#elif defined(__OS2__)
+
+const char dot_path_literal[] = ".";
+const char dot_dot_path_literal[] = "..";
+const char separators[] = "/\\";
+using boost::filesystem::detail::colon;
+using boost::filesystem::detail::questionmark;
+
+inline bool is_alnum(char c)
+{
+    return boost::filesystem::detail::is_letter(c) || (c >= '0' && c <= '9');
+}
+
+inline bool is_device_name_char(char c)
+{
+    // https://googleprojectzero.blogspot.com/2016/02/the-definitive-guide-on-win32-to-nt.html
+    // Device names are:
+    //
+    // - PRN
+    // - AUX
+    // - NUL
+    // - CON
+    // - LPT[1-9]
+    // - COM[1-9]
+    // - CONIN$
+    // - CONOUT$
+    return is_alnum(c) || c == '$';
+}
+
+//! Returns position of the first directory separator in the \a size initial characters of \a p, or \a size if not found
+inline size_type find_separator(const char* p, size_type size) noexcept
+{
+    size_type pos = 0u;
+    for (; pos < size; ++pos)
+    {
+        const char c = p[pos];
         if (boost::filesystem::detail::is_directory_separator(c))
             break;
     }
@@ -181,7 +227,7 @@ BOOST_FILESYSTEM_DECL path path_algorithms::lexically_normal_v3(path const& p)
     size_type root_dir_pos = find_root_directory_start(pathname, pathname_size, root_name_size);
     path normal(pathname, pathname + root_name_size);
 
-#if defined(BOOST_WINDOWS_API)
+#if defined(BOOST_WINDOWS_API) || defined(__OS2__)
     for (size_type i = 0; i < root_name_size; ++i)
     {
         if (normal.m_pathname[i] == path::separator)
@@ -380,7 +426,7 @@ BOOST_FILESYSTEM_DECL path path_algorithms::generic_path_v3(path const& p)
     if (root_name_size > 0u)
     {
         tmp.m_pathname.append(pathname, root_name_size);
-#if defined(BOOST_WINDOWS_API)
+#if defined(BOOST_WINDOWS_API) || defined(__OS2__)
         std::replace(tmp.m_pathname.begin(), tmp.m_pathname.end(), L'\\', L'/');
 #endif
     }
@@ -514,7 +560,7 @@ BOOST_FILESYSTEM_DECL void path_algorithms::append_v4(path& p, const value_type*
             // if (p.is_absolute())
             if
             (
-#if defined(BOOST_WINDOWS_API)
+#if defined(BOOST_WINDOWS_API) || defined(__OS2__)
                 that_root_name_size > 0 &&
 #endif
                 that_root_dir_pos < that_size
@@ -621,7 +667,7 @@ BOOST_FILESYSTEM_DECL path_algorithms::string_type::size_type path_algorithms::a
 {
     string_type::size_type size(p.m_pathname.size());
     if (size > static_cast< string_type::size_type >(0) &&
-#ifdef BOOST_WINDOWS_API
+#if defined(BOOST_WINDOWS_API) || defined(__OS2__)
         p.m_pathname[size - 1] != colon &&
 #endif
         !detail::is_directory_separator(p.m_pathname[size - 1]))
@@ -639,7 +685,7 @@ BOOST_FILESYSTEM_DECL void path_algorithms::erase_redundant_separator(path& p, s
     if (sep_pos                                          // a separator was added
         && sep_pos < p.m_pathname.size()                 // and something was appended
         && (p.m_pathname[sep_pos + 1] == path::separator // and it was also separator
-#ifdef BOOST_WINDOWS_API
+#if defined(BOOST_WINDOWS_API) || defined(__OS2__)
             || p.m_pathname[sep_pos + 1] == path::preferred_separator // or preferred_separator
 #endif
             ))
@@ -1008,7 +1054,7 @@ size_type find_root_directory_start(const value_type* path, size_type size, size
                 root_name_size = 2;
                 return 2;
             }
-#ifdef BOOST_WINDOWS_API
+#if defined(BOOST_WINDOWS_API) || defined(__OS2__)
             // https://docs.microsoft.com/en-us/windows/win32/fileio/naming-a-file
             // cases "\\?\" and "\\.\"
             else if (size >= 4 && (path[2] == questionmark || path[2] == fs::path::dot) && fs::detail::is_directory_separator(path[3]))
@@ -1046,7 +1092,7 @@ size_type find_root_directory_start(const value_type* path, size_type size, size
         }
     }
 
-#ifdef BOOST_WINDOWS_API
+#if defined(BOOST_WINDOWS_API) || defined(__OS2__)
     // case "c:" or "prn:"
     // Note: There is ambiguity in a "c:x" path interpretation. It could either mean a file "x" located at the current directory for drive C:,
     //       or an alternative stream "x" of a file "c". Windows API resolve this as the former, and so do we.
@@ -1380,7 +1426,7 @@ BOOST_FILESYSTEM_DECL path::iterator path::begin() const
     if (element_size > 0)
     {
         itr.m_element = m_pathname.substr(itr.m_pos, element_size);
-#ifdef BOOST_WINDOWS_API
+#if defined(BOOST_WINDOWS_API) || defined(__OS2__)
         if (itr.m_element.m_pathname.size() == 1u && itr.m_element.m_pathname[0] == path::preferred_separator)
             itr.m_element.m_pathname[0] = path::separator;
 #endif
