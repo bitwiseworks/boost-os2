@@ -37,6 +37,7 @@
         || defined(_GLIBCXX_HAS_GTHREADS) \
         || defined(_WIN32) \
         || defined(_AIX) \
+        || defined(__OS2__) \
         || defined(__HAIKU__)
       //
       // If the std lib has thread support turned on, then turn it on in Boost

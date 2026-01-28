@@ -93,6 +93,10 @@
 // Web assembly:
 #  define BOOST_PLATFORM_CONFIG "boost/config/platform/wasm.hpp"
 
+#elif defined (__OS2__)
+// OS/2:
+#  define BOOST_PLATFORM_CONFIG "boost/config/platform/os2.hpp"
+
 #else
 
 #  if defined(unix) \
