@@ -565,6 +565,10 @@ MAX_RELEASE_CHECK_RATE   default: 4095 unless not HAVE_MMAP
 #endif /*MMAP_CLEARS */
 #endif  /* WIN32 */
 
+#ifdef __OS2__
+#define LACKS_SCHED_H
+#endif
+
 #if defined(DARWIN) || defined(_DARWIN)
 /* Mac OSX docs advise not to use sbrk; it seems better to use mmap */
 #ifndef HAVE_MORECORE
