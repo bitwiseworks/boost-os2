@@ -302,10 +302,12 @@ void exec_cmd
             r_limit.rlim_max = globs.timeout;
             setrlimit( RLIMIT_CPU, &r_limit );
         }
+#ifndef __OS2__
         if (0 != setpgid( pid, pid )) {
             errno_puts("setpgid(child)");
             /* b2::clean_exit( EXITBAD ); */
         }
+#endif
         execvp( argv[ 0 ], (char * *)argv );
         errno_puts( "execvp" );
         _exit( 127 );
@@ -316,7 +318,9 @@ void exec_cmd
     /******************/
 
     /* redundant call, ignore return value */
+#ifndef __OS2__
     setpgid(cmdtab[ slot ].pid, cmdtab[ slot ].pid);
+#endif
 
     /* Parent not need the write pipe ends used by the child. */
     close( out[ EXECCMD_PIPE_WRITE ] );
