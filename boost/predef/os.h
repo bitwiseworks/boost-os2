@@ -28,5 +28,6 @@ http://www.boost.org/LICENSE_1_0.txt)
 #include <boost/predef/os/unix.h>
 #include <boost/predef/os/vms.h>
 #include <boost/predef/os/windows.h>
+#include <boost/predef/os/os2.h>
 
 #endif
