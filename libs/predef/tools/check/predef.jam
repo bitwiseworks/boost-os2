@@ -115,6 +115,8 @@ local rule check_target ( language key : requirements * )
         = $(predef_jam:D)/predef_check_cc_as_$(language).$(.$(language).ext) ;
     local include_path
         = $(predef_jam:D)/../../include ;
+    include_path
+        += $(predef_jam:D)/../../../../ ;
     obj predef_check_cc_$(key)
         : $(source_path)
         : <include>$(include_path) $(requirements) ;
