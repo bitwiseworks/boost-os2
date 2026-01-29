@@ -92,6 +92,10 @@
 # include <signal.h>
 #endif
 
+#if defined(__OS2__)
+#include <boost/asio/detail/old_win_sdk_compat.hpp>
+#endif
+
 #include <boost/asio/detail/push_options.hpp>
 
 namespace boost {
@@ -316,10 +320,17 @@ struct in4_mreq_type
 typedef ip_mreq in4_mreq_type;
 # endif
 typedef sockaddr_in sockaddr_in4_type;
+#if defined(__OS2__) && defined(BOOST_ASIO_HAS_OLD_WIN_SDK)
+typedef in6_addr_emulation in6_addr_type;
+typedef ipv6_mreq_emulation in6_mreq_type;
+typedef sockaddr_in6_emulation sockaddr_in6_type;
+typedef sockaddr_storage_emulation sockaddr_storage_type;
+#else
 typedef in6_addr in6_addr_type;
 typedef ipv6_mreq in6_mreq_type;
 typedef sockaddr_in6 sockaddr_in6_type;
 typedef sockaddr_storage sockaddr_storage_type;
+#endif
 typedef sockaddr_un sockaddr_un_type;
 typedef addrinfo addrinfo_type;
 typedef ::linger linger_type;

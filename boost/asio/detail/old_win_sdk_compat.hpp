@@ -17,7 +17,7 @@
 
 #include <boost/asio/detail/config.hpp>
 
-#if defined(BOOST_ASIO_WINDOWS) || defined(__CYGWIN__)
+#if defined(BOOST_ASIO_WINDOWS) || defined(__CYGWIN__) || defined(__OS2__)
 
 // Guess whether we are building against on old Platform SDK.
 #if !defined(IN6ADDR_ANY_INIT)
@@ -25,6 +25,10 @@
 #endif // !defined(IN6ADDR_ANY_INIT)
 
 #if defined(BOOST_ASIO_HAS_OLD_WIN_SDK)
+
+#if defined(__OS2__)
+#define __int64 __int64_t
+#endif
 
 // Emulation of types that are missing from old Platform SDKs.
 //
