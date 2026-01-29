@@ -28,7 +28,7 @@
 #if !defined(BOOST_WAVE_TOKEN_IDS_DEFINED)
 #define BOOST_WAVE_TOKEN_IDS_DEFINED
 
-#if (defined (__FreeBSD__) || defined (__DragonFly__) || defined (__OpenBSD__)) && defined (T_DIVIDE)
+#if (defined (__FreeBSD__) || defined (__DragonFly__) || defined (__OpenBSD__) || defined (__OS2__)) && defined (T_DIVIDE)
 #undef T_DIVIDE
 #endif
 
