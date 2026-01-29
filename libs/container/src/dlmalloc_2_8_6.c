@@ -565,10 +565,6 @@ MAX_RELEASE_CHECK_RATE   default: 4095 unless not HAVE_MMAP
 #endif /*MMAP_CLEARS */
 #endif  /* WIN32 */
 
-#ifdef __OS2__
-#define LACKS_SCHED_H
-#endif
-
 #if defined(DARWIN) || defined(_DARWIN)
 /* Mac OSX docs advise not to use sbrk; it seems better to use mmap */
 #ifndef HAVE_MORECORE
@@ -1494,6 +1490,8 @@ extern void*     sbrk(ptrdiff_t);
 #ifndef WIN32
 #if defined (__SVR4) && defined (__sun)  /* solaris */
 #include <thread.h>
+#elif defined(__OS2__)
+#include <pthread.h>
 #elif !defined(LACKS_SCHED_H)
 #include <sched.h>
 #endif /* solaris or LACKS_SCHED_H */
@@ -1866,6 +1864,8 @@ static FORCEINLINE void x86_clear_lock(int* sl) {
 #define SPIN_LOCK_YIELD  SleepEx(SLEEP_EX_DURATION, FALSE)
 #elif defined (__SVR4) && defined (__sun) /* solaris */
 #define SPIN_LOCK_YIELD   thr_yield();
+#elif defined(__OS2__)
+#define SPIN_LOCK_YIELD   pthread_yield();
 #elif !defined(LACKS_SCHED_H)
 #define SPIN_LOCK_YIELD   sched_yield();
 #else
