@@ -42,7 +42,11 @@
 #else
 #  include <pthread.h>
 #  include <unistd.h>
+#ifndef __OS2__
 #  include <sched.h>
+#else
+#  define sched_yield() pthread_yield()
+#endif
 #  include <time.h>
 #  include <errno.h>
 #  ifdef BOOST_INTERPROCESS_BSD_DERIVATIVE
