@@ -29,6 +29,7 @@
 #ifndef BOOST_SYMBOL_EXPORT
 #  define BOOST_HAS_DECLSPEC
 #  define BOOST_SYMBOL_EXPORT __declspec(dllexport)
+#  define BOOST_SYMBOL_IMPORT
 #endif
 
 // boilerplate code:
