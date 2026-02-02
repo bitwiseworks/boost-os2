@@ -106,7 +106,7 @@
 #    define BOOST_HAS_DECLSPEC
 #    define BOOST_SYMBOL_EXPORT __attribute__((__dllexport__))
 #    define BOOST_SYMBOL_IMPORT __attribute__((__dllimport__))
-#elif defined(__OS2__)
+#  elif defined(__OS2__)
 #    define BOOST_HAS_DECLSPEC
 #    define BOOST_SYMBOL_EXPORT __attribute__((__dllexport__))
 #    define BOOST_SYMBOL_IMPORT
