@@ -122,10 +122,12 @@ void exec_init( void )
         {
             GET_WAIT_FD( i )[ OUT ].fd = -1;
             GET_WAIT_FD( i )[ OUT ].events = POLLIN;
+            GET_WAIT_FD( i )[ OUT ].revents = 0;
             if ( globs.pipe_action )
             {
                 GET_WAIT_FD( i )[ ERR ].fd = -1;
                 GET_WAIT_FD( i )[ ERR ].events = POLLIN;
+                GET_WAIT_FD( i )[ ERR ].revents = 0;
             }
         }
         cmdtab_size = globs.jobs;
