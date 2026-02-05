@@ -457,6 +457,7 @@ static void close_streams( int const i, int const s )
     cmdtab[ i ].fd[ s ] = 0;
 
     GET_WAIT_FD( i )[ s ].fd = -1;
+    GET_WAIT_FD( i )[ s ].revents = 0;
 }
 
 
