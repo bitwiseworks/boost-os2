@@ -792,7 +792,8 @@
 #endif // !defined(BOOST_ASIO_HAS_IOCP)
 
 #if defined(__OS2__)
-#include <libcx/net.h>
+# include <libcx/net.h>
+# define BOOST_ASIO_HAS_UNISTD_H 1
 #endif
 
 // On POSIX (and POSIX-like) platforms we need to include unistd.h in order to
